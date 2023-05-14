@@ -2,8 +2,11 @@ package com.carelesscoders.contactmanagement.controllers;
 
 import com.carelesscoders.contactmanagement.models.ContactDetails;
 import com.carelesscoders.contactmanagement.services.ContactDetailsService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,31 +19,48 @@ public class ContactDetailsController {
     ContactDetailsService contactDetailsService;
 
     @GetMapping(value = "/search")
-    public List<ContactDetails> findContacts(@RequestParam(value = "firstName", required = false) String firstName,
+    public ResponseEntity<List<ContactDetails>> findContacts(@RequestParam(value = "firstName", required = false) String firstName,
                                              @RequestParam(value = "lastName",required = false) String lastName,
                                              @RequestParam(value = "email", required = false) String email){
-        return contactDetailsService.searchContacts(firstName, lastName, email);
+        List<ContactDetails> contactDetailsList = contactDetailsService.searchContacts(firstName, lastName, email);
+        if(contactDetailsList == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(contactDetailsList, HttpStatus.OK);
     }
 
+    @Operation(description = "Add New Contact")
     @PostMapping("/create")
-    public void createContact(@RequestBody ContactDetails contactDetails){
-        contactDetailsService.createNewContact(contactDetails);
+    public ResponseEntity<ContactDetails> createContact(@RequestBody ContactDetails contactDetails){
+        ContactDetails contact = contactDetailsService.createNewContact(contactDetails);
+        return new ResponseEntity<>(contact, HttpStatus.CREATED);
     }
 
     @PostMapping("/create/batch")
-    public void createContactsBatch(@RequestBody List<ContactDetails> contactDetailsList){
-        contactDetailsService.createContactsBatch(contactDetailsList);
+    public ResponseEntity<List<ContactDetails>> createContactsBatch(@RequestBody List<ContactDetails> contactDetailsList){
+        List<ContactDetails> list = contactDetailsService.createContactsBatch(contactDetailsList);
+        return new ResponseEntity<>(list, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public void updateContact(@RequestParam String firstName, @RequestParam String lastName, @RequestBody ContactDetails contactDetails){
-        contactDetailsService.updateContact(firstName, lastName, contactDetails);
+    public ResponseEntity<ContactDetails> updateContact(@RequestParam String firstName, @RequestParam String lastName, @RequestBody ContactDetails contactDetails){
+        ContactDetails contact = contactDetailsService.updateContact(firstName, lastName, contactDetails);
+        if(contact == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            return new ResponseEntity<>(contact, HttpStatus.OK);
+        }
     }
 
     @Transactional
     @DeleteMapping("/delete")
-    public void deleteContact(@RequestParam String firstName, @RequestParam String lastName){
+    public ResponseEntity<ContactDetails> deleteContact(@RequestParam String firstName, @RequestParam String lastName){
+        ContactDetails contactDetails = contactDetailsService.findByFirstNameAndLastName(firstName,lastName);
+        if(contactDetails == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         contactDetailsService.deleteByFirstNameAndLastName(firstName,lastName);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

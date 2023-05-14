@@ -44,24 +44,24 @@ public class ContactDetailsService {
         return contactDetailsRepository.findByFirstNameAndLastName(firstName,lastName);
     }
 
-    public void createNewContact(ContactDetails contactDetails) {
-        contactDetailsRepository.save(contactDetails);
+    public ContactDetails createNewContact(ContactDetails contactDetails) {
+        return contactDetailsRepository.save(contactDetails);
     }
 
-    public void createContactsBatch(List<ContactDetails> contactDetailsList){
-        contactDetailsRepository.saveAll(contactDetailsList);
+    public List<ContactDetails> createContactsBatch(List<ContactDetails> contactDetailsList){
+        return contactDetailsRepository.saveAll(contactDetailsList);
     }
 
-    public void updateContact(String firstName, String lastName, ContactDetails updatedContactDetails){
+    public ContactDetails updateContact(String firstName, String lastName, ContactDetails updatedContactDetails){
         ContactDetails contactDetails = findByFirstNameAndLastName(firstName,lastName);
         if(contactDetails!=null){
             contactDetails.setEmail(updatedContactDetails.getEmail());
             contactDetails.setFirstName(updatedContactDetails.getFirstName());
             contactDetails.setLastName(updatedContactDetails.getLastName());
             contactDetails.setMobileNo(updatedContactDetails.getMobileNo());
-            contactDetailsRepository.save(contactDetails);
+            return contactDetailsRepository.save(contactDetails);
         }else {
-            throw new RuntimeException();
+            return null;
         }
     }
 

@@ -1,6 +1,7 @@
 package com.carelesscoders.contactmanagement.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "contact_details")
@@ -14,8 +15,11 @@ public class ContactDetails {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @Pattern(regexp = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", message = "Invalid email address")
     private String email;
 
+    @Pattern(regexp = "\\d{10}", message = "Invalid mobile number")
     private String mobileNo;
 
     public int getContactId() {
