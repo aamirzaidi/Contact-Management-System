@@ -18,6 +18,7 @@ public class ContactDetailsController {
     @Autowired
     ContactDetailsService contactDetailsService;
 
+    @Operation(description = "Search Contact Service. Search results can be filtered on basis of first name, last name, or email. Provide the parameters as query parameters to do the filtering. ")
     @GetMapping(value = "/search")
     public ResponseEntity<List<ContactDetails>> findContacts(@RequestParam(value = "firstName", required = false) String firstName,
                                              @RequestParam(value = "lastName",required = false) String lastName,
@@ -36,12 +37,14 @@ public class ContactDetailsController {
         return new ResponseEntity<>(contact, HttpStatus.CREATED);
     }
 
+    @Operation(description = "Add New Contacts In Batch")
     @PostMapping("/create/batch")
     public ResponseEntity<List<ContactDetails>> createContactsBatch(@RequestBody List<ContactDetails> contactDetailsList){
         List<ContactDetails> list = contactDetailsService.createContactsBatch(contactDetailsList);
         return new ResponseEntity<>(list, HttpStatus.CREATED);
     }
 
+    @Operation(description = "Update Contact Based on First Name & Last Name")
     @PutMapping("/update")
     public ResponseEntity<ContactDetails> updateContact(@RequestParam String firstName, @RequestParam String lastName, @RequestBody ContactDetails contactDetails){
         ContactDetails contact = contactDetailsService.updateContact(firstName, lastName, contactDetails);
@@ -52,6 +55,7 @@ public class ContactDetailsController {
         }
     }
 
+    @Operation(description = "Delete Contact based on First Name & Last Name")
     @Transactional
     @DeleteMapping("/delete")
     public ResponseEntity<ContactDetails> deleteContact(@RequestParam String firstName, @RequestParam String lastName){
