@@ -13,7 +13,8 @@ public class MySecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
-        httpSecurity.authorizeHttpRequests()
+        httpSecurity.csrf().disable()
+                .authorizeHttpRequests()
                 .requestMatchers("/contacts/**").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
