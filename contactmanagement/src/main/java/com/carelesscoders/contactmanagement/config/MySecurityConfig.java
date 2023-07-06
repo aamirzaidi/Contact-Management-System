@@ -27,7 +27,7 @@ public class MySecurityConfig {
     public InMemoryUserDetailsManager userDetailsService() {
         UserDetails user = User.withDefaultPasswordEncoder()
                 .username("user")
-                .password("lousing360")
+                .password("aamir123")
                 .roles("ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(user);

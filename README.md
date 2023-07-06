@@ -27,7 +27,7 @@ All endpoints require authentication using Basic Auth, where only admin is allow
 
 **username: `user`**
 
-**password: `lousing360`**
+**password: `aamir123`**
 
 ## Documentation
 The API documentation is implemented using OpenAPI docs and can be accessed at the following URL after running the program: http://localhost:8080/swagger-ui/index.html#/. The OpenAPI docs provide a detailed description of each endpoint and its parameters, along with example requests and responses.
